@@ -37,7 +37,7 @@
 
 # Database.
 [database]
-    link  = "mysql:root:password@tcp(127.0.0.1:3306)/yjgo"
+    link  = "mysql:root:root@tcp(127.0.0.1:3306)/yjgo_org"
     debug = true
     # Database logger.
     [database.logger]
