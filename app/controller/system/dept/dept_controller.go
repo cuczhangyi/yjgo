@@ -38,9 +38,7 @@ func Add(r *ghttp.Request) {
 	if pid == 0 {
 		pid = 100
 	}
-
 	tmp := deptService.SelectDeptById(pid)
-
 	response.BuildTpl(r, "system/dept/add.html").WriteTpl(g.Map{"dept": tmp})
 }
 

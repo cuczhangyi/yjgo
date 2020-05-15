@@ -110,7 +110,6 @@ func SelectDeptById(deptId int64) *deptModel.EntityExtend {
 	if err != nil {
 		return nil
 	}
-
 	return deptEntity
 }
 
@@ -125,9 +124,7 @@ func SelectDeptTree(parentId int64, deptName, status string) (*[]model.Ztree, er
 	if err != nil {
 		return nil, err
 	}
-
 	return InitZtree(list, nil), nil
-
 }
 
 //查询部门管理数据

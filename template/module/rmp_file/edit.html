@@ -1,0 +1,95 @@
+<!DOCTYPE html>       
+<!--
+==========================================================================
+云捷GO自动生成修改页面代码,只生成一次,按需修改.
+生成日期：2020-05-11 16:08:09
+生成路径: template/module/rmp_file/edit.html
+生成人：yunjie
+==========================================================================
+-->
+<html lang="zh">
+<head>
+    {{template "header" (ossUrl)}}
+    <link href="/resource//ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-rmp_file-edit">
+        <input name="Id" value="{{.rmp_file.Id}}" type="hidden">
+          
+            <div class="form-group">
+                <label class="col-sm-3 control-label">文件id：</label>
+                <div class="col-sm-8">
+                    <input name="id" value="{{.rmp_file.Id}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">类型名称：</label>
+                <div class="col-sm-8">
+                    <input name="fileName" value="{{.rmp_file.FileName}}" class="form-control"  type="text" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">文件后缀名：</label>
+                <div class="col-sm-8">
+                    <input name="fileExt" value="{{.rmp_file.FileExt}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">存储位置：</label>
+                <div class="col-sm-8">
+                    <textarea name="storeList" class="form-control"
+                              >{{.rmp_file.StoreList}}</textarea>
+                </div>
+            </div>     
+            <div class="form-group">
+                <label class="col-sm-3 control-label">资源类型：</label>
+                <div class="col-sm-8">
+                    <input name="rmpTypeId" value="{{.rmp_file.RmpTypeId}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">meta_data：</label>
+                <div class="col-sm-8">
+                    <textarea name="metaData" class="form-control"
+                              >{{.rmp_file.MetaData}}</textarea>
+                </div>
+            </div>     
+            <div class="form-group">
+                <label class="col-sm-3 control-label">路径id：</label>
+                <div class="col-sm-8">
+                    <input name="pathId" value="{{.rmp_file.PathId}}" class="form-control"  type="text" >
+                </div>
+            </div>
+                    
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="remark" value="{{.rmp_file.Remark}}" class="form-control"  type="text" >
+                </div>
+            </div>
+          
+    </form>
+</div>
+{{template "footer" .Cookie.OssUrl}}
+<script src="/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    var prefix = ctx + "module/rmp_file";
+    $("#form-rmp_file-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-rmp_file-edit').serialize());
+        }
+    }
+                                                    
+    
+</script>
+</body>
+</html>

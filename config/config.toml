@@ -37,7 +37,7 @@
 
 # Database.
 [database]
-    link  = "mysql:root:root@tcp(127.0.0.1:3306)/yjgo_org"
+    link  = "mysql:root:root@tcp(127.0.0.1:3306)/idprmp"
     debug = true
     # Database logger.
     [database.logger]

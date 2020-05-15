@@ -2,9 +2,7 @@
 <html lang="zh">
 <head>
 	{{template "header" (ossUrl)}}
-	<link href="/resource//ajax/libs/bootstrap-table/extensions/editable/bootstrap-editable.css" rel="stylesheet"/>
-	<script src="/resource/ajax/libs/bootstrap-table/extensions/editable/bootstrap-editable.min.js"></script>
-	<script src="/resource/ajax/libs/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -24,6 +22,9 @@
 	</div>
 	
 	{{template "footer" .Cookie.OssUrl}}
+	 <link href="/resource//ajax/libs/bootstrap-table/extensions/editable/bootstrap-editable.css" rel="stylesheet"/>
+	 <script src="/resource/ajax/libs/bootstrap-table/extensions/editable/bootstrap-editable.min.js"></script>
+	 <script src="/resource/ajax/libs/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
 	<th:block th:include="include :: bootstrap-table-editable-js" />
 	
     <script type="text/javascript">

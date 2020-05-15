@@ -183,12 +183,11 @@ func Start(entity *jobModel.Entity) error {
 	}
 
 	gcron.Start(entity.JobName)
-
+	
 	if entity.MisfirePolicy == "1" {
 		entity.Status = "0"
 		entity.Update()
 	}
-
 	return nil
 }
 

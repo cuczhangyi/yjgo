@@ -1,0 +1,86 @@
+<!DOCTYPE html>       
+<!--
+==========================================================================
+云捷GO自动生成修改页面代码,只生成一次,按需修改.
+生成日期：2020-05-13 11:25:57
+生成路径: template/module/rmp_path/edit.html
+生成人：yunjie
+==========================================================================
+-->
+<html lang="zh">
+<head>
+    {{template "header" (ossUrl)}}
+    <link href="/resource//ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-rmp_path-edit">
+        <input id="treeId" name="parentId" type="hidden" value="{{.rmp_path.ParentId}}"/>
+        <input name="PathId" value="{{.rmp_path.PathId}}" type="hidden">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">路径名称：</label>
+                <div class="col-sm-8">
+                    <input name="pathName" value="{{.rmp_path.PathName}}" class="form-control"  type="text" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">父级路径：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input id="treeId" name="parent_id" type="hidden" value="{{.table.parent_id}}"/>
+                        <input class="form-control" type="text" onclick="selectrmp_pathTree()" id="treeName" readonly="true" value="{{.rmp_path.ParentName}}" >
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">路径状态：</label>
+                <div class="col-sm-8">
+                    {{getDictTypeRadio "sys_normal_disable" "status" .rmp_path.Status}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="remark" value="{{.rmp_path.Remark}}" class="form-control"  type="text" >
+                </div>
+            </div>
+    </form>
+</div>
+{{template "footer" .Cookie.OssUrl}}
+<script src="/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    var prefix = ctx + "module/rmp_path";
+    $("#form-rmp_path-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-rmp_path-edit').serialize());
+        }
+    }
+                                                
+    /** 文件夹结构 -新增-选择父部门树 */
+    function selectrmp_pathTree() {
+        var options = {
+            title: '文件夹结构选择',
+            width: "380",
+            url: prefix + "/selectrmp_pathTree?treeId=" + $("#treeId").val(),
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    } 
+</script>
+</body>
+</html>
