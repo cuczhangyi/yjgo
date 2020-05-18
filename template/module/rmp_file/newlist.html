@@ -182,10 +182,6 @@
                     field: 'is_package',
                     title: '是否为文件包（0不是 1是）',
                     formatter: function (value, row, index) {
-                        if (value == 0)
-                            value = "N"
-                        else
-                            value = "Y"
                         return $.table.selectDictLabel(isPackageDatas, value);
                     }
                 },

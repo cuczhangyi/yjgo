@@ -69,7 +69,7 @@ func SelectListByPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 		}    
 		 
 		if param.TypeExt != "" {
-			model.Where("t.type_ext = ?", param.TypeExt)
+			model.Where("t.type_ext like ?", "%"+ param.TypeExt+"%")
 		}     
 		 
 		if param.MetaDataField != "" {
@@ -85,7 +85,7 @@ func SelectListByPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 		}             
 		 
 		if param.Remark != "" {
-			model.Where("t.remark = ?", param.Remark)
+			model.Where("t.remark like ?", "%"+param.Remark+"%")
 		}    
 		if param.BeginTime != "" {
 			model.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)

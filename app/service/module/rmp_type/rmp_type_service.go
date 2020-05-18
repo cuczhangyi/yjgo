@@ -207,3 +207,27 @@ func GetTypeMetadata(typeId int64) *[]MetadataEntity{
 	json.Unmarshal([]byte(metaString),&returnInfo)
 	return &returnInfo
 }
+
+func UpdateJsonMetadata(typeId int64, metadata string) (bool, error){
+	res,err :=rmp_typeModel.Update("meta_data_field= ?", "id=?",metadata,typeId);
+	if err != nil {
+		return false,err
+	}
+	_, err = res.RowsAffected()
+	if  err ==nil {
+		return true, nil
+	}
+	return false, err
+}
+
+func RemoveTypes(ids string) (bool, error){
+	res,err :=rmp_typeModel.Update("del_flag = ?","find_in_set(id,?)","2",ids);
+	if err != nil {
+		return false,err
+	}
+	_, err = res.RowsAffected()
+	if  err ==nil {
+		return true, nil
+	}
+	return false, err
+}

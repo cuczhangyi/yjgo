@@ -127,6 +127,19 @@ func Remove(r *ghttp.Request) {
 	}
 }
 
+
+func RemoveWithIds(r *ghttp.Request) {
+	ids := r.GetQueryString("ids")
+	rs,_ := rmp_typeService.RemoveTypes(ids)
+	if rs {
+		response.SucessResp(r).SetBtype(model.Buniss_Del).SetMsg("删除成功").WriteJsonExit()
+	}else {
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("删除失败", ids).WriteJsonExit()
+	}
+	// todo change File del flag
+}
+
+
 //导出
 func Export(r *ghttp.Request) {
 	var req *rmp_typeModel.SelectPageReq
@@ -160,6 +173,9 @@ func Export(r *ghttp.Request) {
 		 return
 	 }
 	 metadata:=entity.MetaDataField
+	 if  metadata == ""{
+		 metadata = "[]"
+	 }
 	 response.BuildTpl(r, "module/rmp_type/listmetadata.html").WriteTpl(g.Map{"metadata":metadata,"type_id":id, "name":entity.TypeName})
 }
 
@@ -174,4 +190,26 @@ func Getlistmetadata(r *ghttp.Request){
 	}
 	response.BuildTable(r, len(*entity), entity).WriteJsonExit()
 }
+
+func ModifyMetadata(r *ghttp.Request){
+	id:= r.GetQueryInt64("id");
+	if id <= 0 {
+		response.ErrorResp(r).SetMsg("参数错误").Log("rmp_type管理", g.Map{"id":id}).WriteJsonExit()
+	}
+	jsonMetadata:= r.GetString("metadata");
+	entity:= rmp_typeService.GetTypeMetadata(id)
+	if entity== nil {
+		response.ErrorResp(r).SetMsg("值不存在").Log("rmp_type管理", g.Map{"id":id}).WriteJsonExit()
+	}
+
+	isOK, err:=rmp_typeService.UpdateJsonMetadata(id,jsonMetadata)
+	if err == nil  && isOK{
+		response.SucessResp(r).SetMsg("更新成功").Log("rmp_type管理", g.Map{"id":id}).WriteJsonExit()
+	}
+	response.ErrorResp(r).SetMsg("更新错误").Log("rmp_type管理", g.Map{"id":id}).WriteJsonExit()
+
+	//todo change file metadataInfo 要先和旧的做对比哦
+
+}
+
 

@@ -20,9 +20,12 @@ func init() {
 	g1.GET("/add", "module:rmp_type:add", rmp_type.Add)
 	g1.POST("/add", "module:rmp_type:add", rmp_type.AddSave)
 	g1.GET("/remove", "module:rmp_type:remove", rmp_type.Remove)
+	g1.POST("/remove", "module:rmp_type:remove", rmp_type.RemoveWithIds)
 	g1.GET("/edit", "module:rmp_type:edit", rmp_type.Edit)
 	g1.POST("/edit", "module:rmp_type:edit", rmp_type.EditSave)
 	g1.POST("/export", "module:rmp_type:export", rmp_type.Export)
 	g1.GET("/listMetadata", "module:rmp_type:edit", rmp_type.ListMetadata)
 	g1.POST("/getlistmetadata","module:rmp_type:edit",rmp_type.Getlistmetadata)
+	g1.POST("/modifymetadata","module:rmp_type:edit",rmp_type.ModifyMetadata)
+
 }

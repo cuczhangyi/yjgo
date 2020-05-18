@@ -2,9 +2,9 @@
 <!--
 ==========================================================================
 云捷GO自动生成新增页面代码,只生成一次,按需修改.
-生成日期：2020-05-11 16:08:09
+生成日期：2020-05-18 17:22:57
 生成路径: template/module/rmp_file/add.html
-生成人：yunjie
+生成人：张大方
 ==========================================================================
 -->
 <html lang="zh">
@@ -17,7 +17,7 @@
     <form class="form-horizontal m" id="form-rmp_file-add">     
             
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">类型名称：</label>
+                    <label class="col-sm-3 control-label">文件名称：</label>
                     <div class="col-sm-8">
                         <input name="fileName" class="form-control" type="text" required>
                     </div>
@@ -36,6 +36,22 @@
                     <label class="col-sm-3 control-label">存储位置：</label>
                     <div class="col-sm-8">
                         <textarea name="storeList" class="form-control" ></textarea>
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">预览图片：</label>
+                    <div class="col-sm-8">
+                        <input name="prevFilePic" class="form-control" type="text" >
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">预览视频：</label>
+                    <div class="col-sm-8">
+                        <input name="prevFileVideo" class="form-control" type="text" >
                     </div>
                 </div>
                
@@ -60,6 +76,42 @@
                     <label class="col-sm-3 control-label">路径id：</label>
                     <div class="col-sm-8">
                         <input name="pathId" class="form-control" type="text" >
+                    </div>
+                </div>
+               
+              
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">是否为文件包（0不是 1是）：</label>
+                    <div class="col-sm-8">
+                        {{getDictTypeRadio "sys_yes_no" "isPackage" ""}}
+                    </div>
+                </div>  
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">父级文件id(文件包专用)：</label>
+                    <div class="col-sm-8">
+                        <input name="parentId" class="form-control" type="text" >
+                    </div>
+                </div>
+               
+              
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">文件状态（0正常 00000001自身停用, 00000010父级停用, 00000100分类停用, 00001000路径停用）：</label>
+                    <div class="col-sm-8">
+                        <div class="radio-box">
+                            <input type="radio" name="status" value="" required>
+                            <label for="status" text="未知"></label>
+                        </div>
+                        <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                    </div>
+                </div>  
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">删除标志（0正常 00000001自身删除, 00000010父级删除, 00000100分类删除, 00001000路径删除）：</label>
+                    <div class="col-sm-8">
+                        <input name="delFlag" class="form-control" type="text" >
                     </div>
                 </div>
                        
@@ -87,7 +139,7 @@
             $.operate.save(prefix + "/add", $('#form-rmp_file-add').serialize());
         }
     }
-                            
+                                        
     
 </script>
 </body>

@@ -44,9 +44,7 @@
 
         <div class="btn-group-sm" id="toolbar" role="group">
             {{getPermiButton .Session.uid "module:rmp_type:add" "$.operate.add()" "新增" "btn btn-success" "fa fa-plus"}}
-            {{getPermiButton .Session.uid "module:rmp_type:edit" "$.operate.edit()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}
             {{getPermiButton .Session.uid "module:rmp_type:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}
-            {{getPermiButton .Session.uid "module:rmp_type:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
@@ -67,11 +65,17 @@
             updateUrl: prefix + "/edit?id={id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
+            uniqueId: "id",
             modalName: "资源类型",
             columns: [
                 {
                     checkbox: true
-                },  
+                },
+                {
+                    field:"id",
+                    title:"类型id",
+                    visible:false
+                },
                 {
                     field: 'type_name',
                     title: '类型名称'
