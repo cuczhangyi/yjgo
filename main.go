@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	_ "yj-app/boot"
 	_ "yj-app/router"
+	"github.com/RichardKnop/machinery"
 )
 
 // @title 云捷GO 自动生成API文档
@@ -14,11 +15,9 @@ import (
 // @host localhost
 // @BasePath /api
 func main() {
-
+	
 	serverSwitch := g.Cfg().GetBool("status.admin")
 	apiSwitch := g.Cfg().GetBool("status.api")
-
-
 
 	if serverSwitch {
 		g.Server().Start()
