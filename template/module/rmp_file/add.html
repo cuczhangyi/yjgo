@@ -11,111 +11,78 @@
 <head>
     {{template "header" (ossUrl)}}
     <link href="/resource//ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+    <link href="/resource//ajax/libs/jasny/jasny-bootstrap.min.css" rel="stylesheet"/>
+
+    <link href="/resource/ajax/libs/bootstrap-select/bootstrap-select.css" rel="stylesheet"/>
+    <link href="/resource//ajax/libs/bootstrap-fileinput/fileinput.min.css" rel="stylesheet"/>
 </head>
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-    <form class="form-horizontal m" id="form-rmp_file-add">     
-            
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">文件名称：</label>
+    <form class="form-horizontal m" id="form-rmp_file-add" >
+          <input id="selectfileType"   type="text" hidden="hidden">
+          <input name="pathId" type="hidden" id="treeId"/>
+          <div class="form-group">
+              <label class="col-sm-3 control-label">文件名称：</label>
                     <div class="col-sm-8">
-                        <input name="fileName" class="form-control" type="text" required>
+                        <input id="file_name" name="fileName" class="form-control" type="text" required>
                     </div>
                 </div>
-               
-            
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">文件后缀名：</label>
-                    <div class="col-sm-8">
-                        <input name="fileExt" class="form-control" type="text" >
-                    </div>
-                </div>
-               
-            
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">存储位置：</label>
-                    <div class="col-sm-8">
-                        <textarea name="storeList" class="form-control" ></textarea>
-                    </div>
-                </div>
-               
-            
+
                 <div class="form-group">
                     <label class="col-sm-3 control-label">预览图片：</label>
+                    <input id="prevFilePic" name="prevFilePic"  type="text" hidden="hidden">
                     <div class="col-sm-8">
-                        <input name="prevFilePic" class="form-control" type="text" >
+                        <div class="file-loading">
+                            <input class="file" type="file"  name="pic_upload" id="fileinput-prevpic" data-min-file-count="1" data-theme="fas">
+                        </div>
                     </div>
                 </div>
-               
-            
+
                 <div class="form-group">
                     <label class="col-sm-3 control-label">预览视频：</label>
+                    <input id="prevFileVideo" name="prevFileVideo" type="text" hidden="hidden">
                     <div class="col-sm-8">
-                        <input name="prevFileVideo" class="form-control" type="text" >
+                        <div class="file-loading">
+                            <input class="file" type="file"  name="prev_upload" id="fileinput-prevvideo" data-min-file-count="1" data-theme="fas">
+                        </div>
                     </div>
                 </div>
-               
-            
-                <div class="form-group">
+
+               <div class="form-group">
                     <label class="col-sm-3 control-label">资源类型：</label>
                     <div class="col-sm-8">
-                        <input name="rmpTypeId" class="form-control" type="text" >
+                        <select name="rmpTypeId" class="form-control" onchange="selectOnchang(this)">
+                                <option value="">--请选文件类型--</option>
+                                {{range $index, $post := .types}}
+                                    <option value="{{$post.Id}}" types="{{$post.TypeExt}}">{{$post.TypeName}}</option>
+                                {{end}}
+                        </select>
                     </div>
-                </div>
-               
-            
+               </div>
+
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">meta_data：</label>
+                    <label class="col-sm-3 control-label">资源文件：</label>
+                    <input id="tmprmpfile" name="rmpFile" type="text" hidden="hidden">
                     <div class="col-sm-8">
-                        <textarea name="metaData" class="form-control" ></textarea>
-                    </div>
-                </div>
-               
-            
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">路径id：</label>
-                    <div class="col-sm-8">
-                        <input name="pathId" class="form-control" type="text" >
-                    </div>
-                </div>
-               
-              
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">是否为文件包（0不是 1是）：</label>
-                    <div class="col-sm-8">
-                        {{getDictTypeRadio "sys_yes_no" "isPackage" ""}}
-                    </div>
-                </div>  
-               
-            
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">父级文件id(文件包专用)：</label>
-                    <div class="col-sm-8">
-                        <input name="parentId" class="form-control" type="text" >
-                    </div>
-                </div>
-               
-              
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">文件状态（0正常 00000001自身停用, 00000010父级停用, 00000100分类停用, 00001000路径停用）：</label>
-                    <div class="col-sm-8">
-                        <div class="radio-box">
-                            <input type="radio" name="status" value="" required>
-                            <label for="status" text="未知"></label>
+                        <div class="file-loading">
+                            <input class="file" name="resfile" type="file"  id="fileinput-rmpfile" data-min-file-count="1" data-theme="fas">
                         </div>
-                        <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
                     </div>
-                </div>  
-               
+
+                </div>
+
             
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">删除标志（0正常 00000001自身删除, 00000010父级删除, 00000100分类删除, 00001000路径删除）：</label>
+                    <label class="col-sm-3 control-label"><span style="color: red; ">*</span>路径：</label>
                     <div class="col-sm-8">
-                        <input name="delFlag" class="form-control" type="text" >
+                        <div class="input-group">
+                            <input name="path_name" onclick="selectPathTree()" id="treeName" type="text"
+                                   placeholder="请选择路径" class="form-control" required>
+                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        </div>
                     </div>
                 </div>
-                       
-            
+
                 <div class="form-group">
                     <label class="col-sm-3 control-label">备注：</label>
                     <div class="col-sm-8">
@@ -127,7 +94,9 @@
 </div>
 {{template "footer" .Cookie.OssUrl}}
 <script src="/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
-
+<script src="/resource/ajax/libs/jasny/jasny-bootstrap.min.js"></script>
+<script src="/resource/ajax/libs/bootstrap-select/bootstrap-select.js"></script>
+<script src="/resource/ajax/libs/bootstrap-fileinput/fileinput.min.js"></script>
 <script type="text/javascript">
     var prefix = ctx + "module/rmp_file";
     $("#form-rmp_file-add").validate({
@@ -136,11 +105,205 @@
 
     function submitHandler() {
         if ($.validate.form()) {
-            $.operate.save(prefix + "/add", $('#form-rmp_file-add').serialize());
+            if(checkSumbit())
+            {
+                $.operate.save(prefix + "/add", $('#form-rmp_file-add').serialize());
+            }
+
         }
     }
-                                        
-    
+
+    /*用户管理-新增-选择部门树*/
+    function selectPathTree() {
+        var treeId = $("#treeId").val();
+        var deptId = $.common.isEmpty(treeId) ? "100000" : $("#treeId").val();
+        var url = ctx + "module/rmp_path/selectrmp_pathTree?treeId=" + deptId;
+        var options = {
+            title: '选择路径',
+            width: "380",
+            url: url,
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero) {
+        var tree = layero.find("iframe")[0].contentWindow.$._tree;
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    }
+
+    function selectOnchang(obj)
+    {
+        alert(obj.selectedIndex);
+        if (obj.selectedIndex == 0)
+        {
+            $("#selectfileType").val("");
+        }
+        else
+            $("#selectfileType").val( obj.options[obj.selectedIndex].attributes[1].nodeValue);
+    }
+
+    $("#fileinput-prevvideo").fileinput({
+        'theme': 'explorer-fas',
+        'uploadUrl': ctx + "module/rmp_file/uploadprevvideo",
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        allowedFileTypes:['video'],
+        allowedFileExtensions:['MP4']
+    });
+
+    $('#fileinput-prevvideo').on('fileuploaderror', function(event, data, msg) {
+        $.modal.msgError("上传视频失败");
+        $("#prevFileVideo").val("");
+    });
+
+    $('#fileinput-prevvideo').on('fileuploaded', function(event, data, msg) {
+       if (data.response.code==0)
+       {
+           $("#prevFileVideo").val(data.response.data.name );
+           //var filename =$("#file_name").val();
+           // if ($.common.isEmpty(filename))
+           // {
+           //     $("#file_name").val(data.files[0].name);
+           // }
+       }
+
+    });
+
+
+    $('#fileinput-prevvideo').on('fileremoved', function(event, id, index) {
+        $("#prevFileVideo").val("");
+    });
+
+    $('#fileinput-prevvideo').on('filecleared', function(event) {
+        $("#prevFileVideo").val("");
+    });
+
+    $("#fileinput-prevpic").fileinput({
+        'theme': 'explorer-fas',
+        'uploadUrl': ctx + "module/rmp_file/uploadprevpic",
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        allowedFileTypes:['image'],
+        allowedFileExtensions:['png','jpg','jpeg']
+    });
+
+    $('#fileinput-prevpic').on('fileuploaderror', function(event, data, msg) {
+        $.modal.msgError("上传视频失败");
+        $("#prevFilePic").val("");
+    });
+
+    $('#fileinput-prevpic').on('fileuploaded', function(event, data, msg) {
+        if (data.response.code==0)
+        {
+            $("#prevFilePic").val(data.response.data.name );
+            //var filename =$("#file_name").val();
+            // if ($.common.isEmpty(filename))
+            // {
+            //     $("#file_name").val(data.files[0].name);
+            // }
+        }
+
+    });
+
+
+    $('#fileinput-prevpic').on('fileremoved', function(event, id, index) {
+        $("#prevFilePic").val("");
+    });
+
+    $('#fileinput-prevpic').on('filecleared', function(event) {
+        $("#prevFilePic").val("");
+    });
+
+
+    $("#fileinput-rmpfile").fileinput({
+        'theme': 'explorer-fas',
+        'uploadUrl': ctx + "module/rmp_file/uploadrmpfile",
+        overwriteInitial: false,
+        initialPreviewAsData: true
+    });
+
+    $('#fileinput-rmpfile').on('fileuploaderror', function(event, data, msg) {
+        $.modal.msgError("上传视频失败");
+        $("#tmprmpfile").val("");
+    });
+
+    $('#fileinput-rmpfile').on('fileuploaded', function(event, data, msg) {
+        if (data.response.code==0)
+        {
+            $("#tmprmpfile").val(data.response.data.name);
+            var filename = data.files[0].name;
+            var rmpName = $("#file_name").val();
+            if($.common.isEmpty(rmpName))
+            {
+                $("#file_name").val(filename);
+            }
+        }
+    });
+
+
+    $('#fileinput-rmpfile').on('fileremoved', function(event, id, index) {
+        $("#tmprmpfile").val("");
+    });
+
+    $('#fileinput-rmpfile').on('filecleared', function(event) {
+        $("#tmprmpfile").val("");
+    });
+
+    function extname(filename){
+        if(!filename||typeof filename!='string'){
+            return false
+        };
+        let a = filename.split('').reverse().join('');
+        let b = a.substring(0,a.search(/\./)).split('').reverse().join('');
+        return b
+    };
+
+
+    function checkSumbit()
+    {
+        var dataobj = $('#form-rmp_file-add').serializeArray();
+
+        for (var i = 0; i < dataobj.length; i ++)
+        {
+            switch (dataobj[i].name) {
+                case "fileName":
+                    if ($.common.isEmpty(dataobj[i].value)){
+                        $.modal.msgError("请填写文件名称");
+                        return false;
+                    }
+                    break;
+                case "rmpTypeId":
+                    if ($.common.isEmpty(dataobj[i].value) || dataobj[i].value == 0){
+                        $.modal.msgError("请选择文件类型");
+                        return false;
+                    }
+                    break;
+                case "tmprmpfile":
+                    if ($.common.isEmpty(dataobj[i].value)){
+                        $.modal.msgError("请上传文件");
+                        return false;
+                    }
+                    break;
+                case "selectfileType":
+                    var files = $("#selectfileType").val();
+                    var types = $.common.split(files);
+                    var ext = extname(files);
+                    if ($.inArray(ext, types) == -1)
+                    {
+                        $.modal.msgError("文件类型与上传文件不对应");
+                        return false;
+                    }
+                    break;
+            }
+        }
+        return true;
+    }
+
+
 </script>
 </body>
 </html>

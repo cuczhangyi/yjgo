@@ -32,8 +32,10 @@ type Entity struct {
 	 CreateTime    *gtime.Time         `orm:"create_time" json:"create_time"`    // 创建时间  
 	 UpdateBy    string         `orm:"update_by" json:"update_by"`    // 更新者  
 	 UpdateTime    *gtime.Time         `orm:"update_time" json:"update_time"`    // 更新时间  
-	 Remark    string         `orm:"remark" json:"remark"`    // 备注  
+	 Remark    string         `orm:"remark" json:"remark"`    // 备注
 }
+
+
 
 // OmitEmpty sets OPTION_OMITEMPTY option for the model, which automatically filers
 // the data and where attributes for empty values.

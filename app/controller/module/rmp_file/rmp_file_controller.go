@@ -11,8 +11,14 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/model"
 	rmp_fileModel "yj-app/app/model/module/rmp_file"
+	rmp_typeModel "yj-app/app/model/module/rmp_type"
 	rmp_fileService "yj-app/app/service/module/rmp_file"
+	rmp_typeService "yj-app/app/service/module/rmp_type"
+
+
+	"yj-app/app/utils/recvfile"
 	"yj-app/app/utils/response"
+	"yj-app/app/utils/rmp_pathtools"
 )
 
 //列表页
@@ -22,40 +28,73 @@ func List(r *ghttp.Request) {
 
 //列表分页数据
 func ListAjax(r *ghttp.Request) {
+
 	var req *rmp_fileModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
 		response.ErrorResp(r).SetMsg(err.Error()).Log("rmp_file管理", req).WriteJsonExit()
 	}
-	rows := make([]rmp_fileModel.Entity, 0)
+	rows := make([]rmp_fileModel.ExtendEntity, 0)
 	result, page, err := rmp_fileService.SelectListByPage(req)
 
 	if err == nil && len(result)>0 {
 		rows = result
 	}
-
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.BuildTpl(r, "module/rmp_file/add.html").WriteTpl()
+	req:= new (rmp_typeModel.SelectPageReq)
+	req.DelFlag = "0"
+	req.Status = "0"
+	rs, err := rmp_typeService.SelectListAll(req)
+	if err != nil {
+		response.ErrorTpl(r).WriteTpl(g.Map{
+			"desc": "文件类型获取失败",
+		})
+		return
+	}
+
+	if len(rs) == 0{
+		response.ErrorTpl(r).WriteTpl(g.Map{
+			"desc": "文件类型不存在",
+		})
+		return
+	}
+	response.BuildTpl(r, "module/rmp_file/add.html").WriteTpl(g.Map{"types":rs})
 }
+
+
 
 //新增页面保存
 func AddSave(r *ghttp.Request) {
-	var req *rmp_fileModel.AddReq
+
+	var reqExtend *rmp_fileModel.ExtendAddReq
+
 	//获取参数
-	if err := r.Parse(&req); err != nil {
-		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("资源文件新增数据", req).WriteJsonExit()
+	if err := r.Parse(&reqExtend); err != nil {
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("资源文件新增数据", reqExtend).WriteJsonExit()
 	}
 
-	id, err := rmp_fileService.AddSave(req, r.Session)
-
+	id, err := rmp_fileService.AddSaveExtend(reqExtend,r.Session)
 	if err != nil || id <= 0 {
-		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("资源文件新增数据", req).WriteJsonExit()
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("资源文件新增数据", reqExtend).WriteJsonExit()
 	}
-	response.SucessResp(r).SetData(id).Log("资源文件新增数据", req).WriteJsonExit()
+	response.SucessResp(r).SetData(id).Log("资源文件新增数据", reqExtend).WriteJsonExit()
+
+	//var req *rmp_fileModel.AddReq
+	////获取参数
+	//if err := r.Parse(&req); err != nil {
+	//	response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("资源文件新增数据", req).WriteJsonExit()
+	//}
+	//
+	//id, err := rmp_fileService.AddSave(req, r.Session)
+	//
+	//if err != nil || id <= 0 {
+	//	response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("资源文件新增数据", req).WriteJsonExit()
+	//}
+	//response.SucessResp(r).SetData(id).Log("资源文件新增数据", req).WriteJsonExit()
 }
 
 //修改页面
@@ -68,7 +107,6 @@ func Edit(r *ghttp.Request) {
 		})
 		return
 	}
-
 	entity, err := rmp_fileService.SelectRecordById(id)
 
 	if err != nil || entity == nil {
@@ -129,4 +167,29 @@ func Export(r *ghttp.Request) {
 		response.ErrorResp(r).SetBtype(model.Buniss_Other).Log("资源文件导出数据", req).WriteJsonExit()
 	}
 	response.SucessResp(r).SetBtype(model.Buniss_Other).SetMsg(url).WriteJsonExit()
+}
+
+
+//上传单个文件
+func UploadFile(r *ghttp.Request, fileName string){
+	files := recvfile.GetUploadFile(r,fileName)
+	savedir:= rmp_pathtools.GetTmpPath()
+	names, err := files.Save(savedir,true)
+	if err != nil {
+		response.ErrorResp(r).SetBtype(model.Buniss_Other).Log("上传文件失败","" ).WriteJsonExit()
+	}
+	response.SucessResp(r).SetBtype(model.Buniss_Other).Log("上传文件成功","" ).SetData(g.Map{"name":names}).WriteJsonExit()
+}
+
+
+func UploadPrevPic(r *ghttp.Request){
+		UploadFile(r, "pic_upload")
+}
+
+func UploadPrevVideo(r *ghttp.Request){
+	UploadFile(r, "prev_upload")
+}
+
+func UploadRmpFile(r *ghttp.Request){
+	UploadFile(r, "resfile")
 }

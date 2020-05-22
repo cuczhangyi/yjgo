@@ -1,6 +1,7 @@
 package main
 
 import (
+
 	"github.com/gogf/gf/frame/g"
 	_ "yj-app/boot"
 	_ "yj-app/router"
@@ -17,6 +18,8 @@ func main() {
 	serverSwitch := g.Cfg().GetBool("status.admin")
 	apiSwitch := g.Cfg().GetBool("status.api")
 
+
+
 	if serverSwitch {
 		g.Server().Start()
 	}
@@ -27,6 +30,5 @@ func main() {
 		api.SetAddr(address)
 		api.Start()
 	}
-
 	g.Wait()
 }

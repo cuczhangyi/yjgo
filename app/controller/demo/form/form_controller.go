@@ -68,3 +68,4 @@ func Validate(r *ghttp.Request) {
 func Wizard(r *ghttp.Request) {
 	response.BuildTpl(r, "demo/form/wizard.html").WriteTpl()
 }
+

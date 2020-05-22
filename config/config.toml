@@ -1,4 +1,8 @@
 # HTTP Server
+
+
+
+
 [status]
     admin = true
     api = true
@@ -65,3 +69,18 @@
     [compiler.VarMap]
         author = "yjgo"
         email  = "yjgo@163.org"
+
+[store]
+    tmpsavepath = "H:/GoWorkspace/src/github.com/yjgo_zy/tmp/"
+    urloss = "http://localhost:8199"
+    urlprev ="resource/save1"
+    count = 2
+    store1  = "H:/GoWorkspace/src/github.com/yjgo_zy/public/resource/save1/"
+    store2 = "H:/GoWorkspace/src/github.com/yjgo_zy/public/resource/save2/"
+    prevpic = "/prevpic"
+    prevvideo = "/prevvideo"
+    filesave = "/save"
+
+
+[defaultinfo]
+    prevpic = "/resource/image/default.jpg"

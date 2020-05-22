@@ -26,11 +26,7 @@ type AddReq struct {
 	 ParentId  int64   `p:"parentId" `  
 	 Status  int64   `p:"status" v:"required#文件状态（0正常 00000001自身停用, 00000010父级停用, 00000100分类停用, 00001000路径停用）不能为空"`  
 	 DelFlag  int64   `p:"delFlag" `  
-	 
-	 
-	 
-	 
-	 Remark  string   `p:"remark" `  
+	 Remark  string   `p:"remark" `
 }
 
 //修改页面请求参数
@@ -47,7 +43,7 @@ type EditReq struct {
       IsPackage  string `p:"isPackage" `   
       ParentId  int64 `p:"parentId" `   
       Status  int64 `p:"status" v:"required#文件状态（0正常 00000001自身停用, 00000010父级停用, 00000100分类停用, 00001000路径停用）不能为空"`             
-      Remark  string `p:"remark" `  
+      Remark  string `p:"remark" `
 }
 
 //分页请求参数 
@@ -71,8 +67,20 @@ type SelectPageReq struct {
 	IsAsc         string `p:"isAsc"`         //排序方式
 }
 
+type ExtendEntity struct {
+	Entity
+	Childrenfile []Entity
+	TypeName  string 			`orm:"type_name" json:"type_name"`    // 类型名称
+	PathName  string 			`orm:"path_name" json:"path_name"`    // 类型名称
+}
+
+type ExtendAddReq struct{
+	AddReq
+	Rmpfile string `p:"rmpFile"`
+}
+
 //根据条件分页查询数据
-func SelectListByPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
+func SelectListByPage(param *SelectPageReq) ([]ExtendEntity, *page.Paging, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -81,8 +89,16 @@ func SelectListByPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 
 	model := db.Table("rmp_file t")
 
+	model.LeftJoin("rmp_path path", "t.path_id = path.path_id")
+	model.LeftJoin("rmp_type type", "t.rmp_type_id = type.id")
+
+
+	model.Where("t.status = 0")
+	model.Where("t.del_flag = 0")
+	model.Where("t.parent_id = 0")
+
+
 	if param != nil {    
-		
 		if param.FileName != "" {
 			model.Where("t.file_name like ?", "%"+param.FileName+"%")
 		}    
@@ -111,9 +127,8 @@ func SelectListByPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 		 
 		if param.IsPackage != "" {
 			model.Where("t.is_package = ?", param.IsPackage)
-		}     
-		     
-		                
+		}
+
 		if param.BeginTime != "" {
 			model.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
 		}
@@ -124,20 +139,17 @@ func SelectListByPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 	}
 
 	total, err := model.Count()
-
 	if err != nil {
 		return nil, nil, gerror.New("读取行数失败")
 	}
 
 	page := page.CreatePaging(param.PageNum, param.PageSize, total)
-
+	model.Fields("t.*, path.path_name,type.type_name")
 	model.Limit(page.StartNum, page.Pagesize)
-
 	if param.OrderByColumn != "" {
 		model.Order(param.OrderByColumn + " " + param.IsAsc)
 	}
-
-	var result []Entity
+	var result []ExtendEntity
 	model.Structs(&result)
 	return result, page, nil
 }
@@ -266,4 +278,25 @@ func SelectListAll(param *SelectPageReq) ([]Entity,error) {
 	var result []Entity
 	model.Structs(&result)
 	return result, nil
+}
+
+func GetChildFile(fileId int64, entitys *[]Entity )(error){
+	db, err := gdb.Instance()
+
+	if err != nil {
+		return   gerror.New("获取数据库连接失败")
+	}
+
+	model := db.Table("rmp_file t")
+	model.LeftJoin("rmp_path path", "t.path_id = path.path_id")
+	model.LeftJoin("rmp_type type", "t.rmp_type_id = type.id")
+	model.Fields("t.*, path.path_name,type.type_name")
+
+	model.Where("t.status = 0")
+	model.Where("t.del_flag = 0")
+	model.Where("t.parent_id = ?",fileId)
+	model.Fields("t.*, path.path_name,type.type_name")
+	model.Structs(entitys)
+	return nil
+
 }

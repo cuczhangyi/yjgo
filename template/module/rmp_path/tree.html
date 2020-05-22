@@ -17,8 +17,8 @@
     button{font-family: "SimSun","Helvetica Neue",Helvetica,Arial;}
 </style>
 <body class="hold-transition box box-main">
-<input id="treeId"   name="treeId"    type="hidden" value="rmp_path.path_id"/>
-<input id="treeName" name="treeName"  type="hidden" value="rmp_path.path_name"/>
+<input id="treeId"   name="treeId"    type="hidden" value="{{.path.PathId}}"/>
+<input id="treeName" name="treeName"  type="hidden" value="{{.path.PathName}}"/>
 <div class="wrapper"><div class="treeShowHideButton" onclick="$.tree.toggleSearch();">
         <label id="btnShow" title="显示搜索" style="display:none;">︾</label>
         <label id="btnHide" title="隐藏搜索">︽</label>

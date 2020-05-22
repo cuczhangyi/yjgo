@@ -42,6 +42,7 @@
         <div class="row">
             <div class="col-sm-12 search-collapse">
                 <form id="formId">
+                    <input type="hidden" id="pathId" name="pathId">
                     <div class="select-list">
                         <ul>
                             <li>
@@ -67,11 +68,6 @@
                             <li>
                                 <p>资源类型：</p>
                                 <input type="text" name="rmpTypeId"/>
-                            </li>
-
-                            <li>
-                                <p>路径id：</p>
-                                <input type="text" name="pathId"/>
                             </li>
 
                             <li>
@@ -109,6 +105,7 @@
     var removeFlag = '{{hasPermi .Session.uid "module:rmp_file:remove"}}';
 
     var isPackageDatas = {{getDictTypeData "sys_yes_no"}};
+    var isDisableDatas ={{getDictTypeData "sys_normal_disable"}};
     var prefix = ctx + "module/rmp_file";
 
 
@@ -137,6 +134,8 @@
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
             modalName: "资源文件",
+            detailView: true,
+            detailFormatter: detailFormatter,
             columns: [
                 {
                     checkbox: true
@@ -160,27 +159,22 @@
                 },
                 {
                     field: 'prev_file_pic',
-                    title: '预览图片'
+                    title: '预览图片',
+                    formatter: function(value, row, index) {
+                        return $.table.imageView(row.prev_file_pic);
+                    }
                 },
                 {
-                    field: 'prev_file_video',
-                    title: '预览视频'
-                },
-                {
-                    field: 'rmp_type_id',
+                    field: 'type_name',
                     title: '资源类型'
                 },
                 {
-                    field: 'meta_data',
-                    title: 'meta_data'
-                },
-                {
-                    field: 'path_id',
+                    field: 'path_name',
                     title: '路径id'
                 },
                 {
                     field: 'is_package',
-                    title: '是否为文件包（0不是 1是）',
+                    title: '文件包',
                     formatter: function (value, row, index) {
                         if (value == 0)
                             value = "N"
@@ -190,12 +184,15 @@
                     }
                 },
                 {
-                    field: 'parent_id',
-                    title: '父级文件id(文件包专用)'
-                },
-                {
                     field: 'status',
-                    title: '文件状态（0正常 00000001自身停用, 00000010父级停用, 00000100分类停用, 00001000路径停用）'
+                    title: '文件状态',
+                    formatter: function (value, row, index) {
+                        if (value == 0)
+                            value = "0"
+                        else
+                            value = "1"
+                        return $.table.selectDictLabel(isDisableDatas, value);
+                    }
                 },
                 {
                     field: 'remark',
@@ -206,7 +203,15 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        if(row.is_package == 0)
+                        {
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        }
+                        else
+                        {
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="editPackage(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        }
+
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
@@ -215,6 +220,25 @@
         };
         $.table.init(options);
     }
+    function detailFormatter(index, row) {
+        var html = [];
+        data = row.meta_data.replace(/^\s+|\s+$/gm,'');
+        if (data == '')
+            return '<p><b>附属信息为空</b></p>';
+        var info = JSON.parse(row.meta_data);
+        var mapData = new Map();
+        for (var i = 0; i < info.length; i++)
+        {
+            var item = info[i];
+            mapData.set(item.name,item.values)
+            html.push('<p><b>' + item.name + ':</b> ' +item.values + '</p>');
+        }
+        if (html.length  == 0)
+            return '<p><b>附属信息为空</b></p>';
+        else
+            return html.join('');
+    }
+
     $(function () {
         var panehHidden = false;
         if ($(this).width() < 769) {
@@ -238,8 +262,13 @@
     });
 
     $('#btnRefresh').click(function () {
-        queryDeptTree();
+        queryPathTree();
     });
+
+    function editPackage(id)
+    {
+        alert("editPackage" +id);
+    }
 </script>
 </body>
 </html>

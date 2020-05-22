@@ -224,7 +224,6 @@ func InitZtree(deptList []rmp_pathModel.Entity, roleDeptList *[]string) *[]model
 	return &result
 }
 
-
 //根据条件查询数据
 func SelectListAll(params *rmp_pathModel.SelectPageReq) ([]rmp_pathModel.Entity, error) {
 	return rmp_pathModel.SelectListAll(params)

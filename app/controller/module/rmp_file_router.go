@@ -23,4 +23,7 @@ func init() {
 	g1.GET("/edit", "module:rmp_file:edit", rmp_file.Edit)
 	g1.POST("/edit", "module:rmp_file:edit", rmp_file.EditSave)
 	g1.POST("/export", "module:rmp_file:export", rmp_file.Export)
+	g1.POST("/uploadprevvideo", "module:rmp_file:add", rmp_file.UploadPrevVideo)
+	g1.POST("/uploadprevpic", "module:rmp_file:add", rmp_file.UploadPrevPic)
+	g1.POST("/uploadrmpfile", "module:rmp_file:add", rmp_file.UploadRmpFile)
 }

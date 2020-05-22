@@ -164,7 +164,7 @@ func Selectrmp_pathTree(r *ghttp.Request) {
 
 	if pathPoint != nil {
 		response.BuildTpl(r, "module/rmp_path/tree.html").WriteTpl(g.Map{
-			"dept": *pathPoint,
+			"path": *pathPoint,
 		})
 	} else {
 			response.BuildTpl(r, "module/rmp_path/tree.html").WriteTpl()
